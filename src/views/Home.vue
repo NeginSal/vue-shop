@@ -1,6 +1,9 @@
 <template>
   <div class="home">
     <h1 class="text-primary"><fa icon="shopping-cart" />Shopping Cart</h1>
+    <Curr />
+    <CustomAlert />
+    <Product />
   </div>
 </template>
 

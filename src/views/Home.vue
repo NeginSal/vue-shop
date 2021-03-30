@@ -1,18 +1,52 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <h1 class="text-primary"><fa icon="shopping-cart" />Shopping Cart</h1>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
-import HelloWorld from "@/components/HelloWorld.vue";
+ import Curr from '@/components/Curr'
+ import CustomAlert from '@/components/CustomAlert'
+ import Product from '@/components/Product'
 
 export default {
-  name: "Home",
-  components: {
-    HelloWorld,
+  name: 'Home',
+
+  data: function() {
+    return {
+      max: 50,
+      cart: [],
+      displayCart: false,
+      products: []
+    }
   },
-};
+  components: {
+    Curr,
+    CustomAlert,
+    Product
+  },
+  created() {
+    fetch('https://hplussport.com/api/products/order/price')
+      .then(response => response.json())
+      .then(data => {
+        this.products = data
+      })
+  },
+  computed: {
+    filteredProducts() {
+      return this.products.filter(item => item.price < this.max)
+    },
+    cartTotal() {
+      return this.cart.reduce((inc, item) => Number(item.price) + inc, 0)
+    }
+  },
+  methods: {
+    addToCart(product) {
+      this.cart.push(product)
+      if (this.cartTotal >= 100) {
+        this.salesBtn = 'btn-danger'
+      }
+    }
+  }
+}
 </script>

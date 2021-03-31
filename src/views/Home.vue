@@ -1,54 +1,29 @@
 <template>
-  <div class="home">
-    <h1 class="text-primary"><fa icon="shopping-cart" />Shopping Cart</h1>
-    <Curr />
-    <CustomAlert />
-    <Product />
-  </div>
+  <section class="container">
+    <range-selector :products="filteredProducts" v-model="max" />
+    <product-list :products="filteredProducts" />
+  </section>
 </template>
 
 <script>
- import Curr from '@/components/Curr'
- import CustomAlert from '@/components/CustomAlert'
- import Product from '@/components/Product'
-
+import ProductList from '@/components/ProductList'
+import RangeSelector from '@/components/RangeSelector'
 export default {
   name: 'Home',
-
-  data: function() {
+  data: function () {
     return {
       max: 50,
-      cart: [],
-      displayCart: false,
-      products: []
+      cart: []
     }
   },
+  props: ['products'],
   components: {
-    Curr,
-    CustomAlert,
-    Product
-  },
-  created() {
-    fetch('https://hplussport.com/api/products/order/price')
-      .then(response => response.json())
-      .then(data => {
-        this.products = data
-      })
+    RangeSelector,
+    ProductList
   },
   computed: {
     filteredProducts() {
-      return this.products.filter(item => item.price < this.max)
-    },
-    cartTotal() {
-      return this.cart.reduce((inc, item) => Number(item.price) + inc, 0)
-    }
-  },
-  methods: {
-    addToCart(product) {
-      this.cart.push(product)
-      if (this.cartTotal >= 100) {
-        this.salesBtn = 'btn-danger'
-      }
+      return this.products.filter(item => item.price < Number(this.max))
     }
   }
 }
